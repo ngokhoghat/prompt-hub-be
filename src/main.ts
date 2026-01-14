@@ -11,6 +11,6 @@ import { DatabaseService } from './config/_database/database.service';
   app.setGlobalPrefix('api-fs');
   app.enableCors({ origin: true, credentials: true });
   app.useStaticAssets(join(__dirname, '..', 'public'));
-  await app.listen(8887, '0.0.0.0');
+  await app.listen(process.env.PORT || 8889, '0.0.0.0');
   logger.log(`Server is running at ${await app.getUrl()}`);
 })();

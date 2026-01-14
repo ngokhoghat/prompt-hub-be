@@ -14,6 +14,12 @@ import { BadRequestExceptionFilter } from 'src/config/_exception-handler/BadRequ
 import { TransformResponseInterceptor } from 'src/config/_interceptor/TransformResponse';
 import { ValidationException } from 'src/config/_exception-handler/ValidationException';
 import { FileStorageModule } from './file-storage/file-storage.module';
+import { PromptModule } from './prompt/prompt.module';
+import { AIModelModule } from './ai-model/ai-model.module';
+import { CategoryModule } from './category/category.module';
+import { TagModule } from './tag/tag.module';
+import { PromptInteractionModule } from './prompt-interaction/prompt-interaction.module';
+import { TrendingModule } from './trending/trending.module';
 
 @Module({
   providers: [
@@ -34,7 +40,13 @@ import { FileStorageModule } from './file-storage/file-storage.module';
     ScheduleModule.forRoot(),
     FileStorageModule,
     UploadModule,
-    AuthModule
+    AuthModule,
+    PromptModule,
+    AIModelModule,
+    CategoryModule,
+    TagModule,
+    PromptInteractionModule,
+    TrendingModule
   ],
 })
 export class AppModule { }
