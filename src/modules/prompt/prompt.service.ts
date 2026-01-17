@@ -27,7 +27,7 @@ export class PromptService {
         return await this.promptRepository.save(prompt);
     }
 
-    async findAll(search?: string) {
+    async findAll(search?: string, categoryId?: string, modelId?: string) {
         const queryBuilder = this.promptRepository.createQueryBuilder('prompt')
             .leftJoinAndSelect('prompt.tags', 'tags')
             .leftJoinAndSelect('prompt.aiModel', 'aiModel')
@@ -35,9 +35,17 @@ export class PromptService {
 
         if (search) {
             queryBuilder.where(
-                'MATCH(prompt.title, prompt.description, prompt.content) AGAINST (:search IN NATURAL LANGUAGE MODE)',
-                { search }
+                'MATCH(prompt.title, prompt.description, prompt.content) AGAINST (:search IN BOOLEAN MODE)',
+                { search: `${search}*` }
             );
+        }
+
+        if (categoryId) {
+            queryBuilder.andWhere('category.id = :categoryId', { categoryId });
+        }
+
+        if (modelId) {
+            queryBuilder.andWhere('aiModel.id = :modelId', { modelId });
         }
 
         return await queryBuilder.getMany();

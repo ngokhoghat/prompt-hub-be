@@ -13,8 +13,8 @@ export class PromptController {
     }
 
     @Get()
-    findAll(@Query('search') search: string) {
-        return this.promptService.findAll(search);
+    findAll(@Query('search') search: string, @Query('categoryId') categoryId: string, @Query('modelId') modelId: string) {
+        return this.promptService.findAll(search, categoryId, modelId);
     }
 
     @Get(':id')
