@@ -10,6 +10,9 @@ export class Prompt extends CustomBaseEntity {
     @Column({ name: "title" })
     title: string;
 
+    @Column({ name: "slug", default: crypto.randomUUID() })
+    slug: string;
+
     @Column({ name: "description", type: "text", nullable: true })
     description: string;
 
@@ -33,6 +36,9 @@ export class Prompt extends CustomBaseEntity {
 
     @Column({ name: "is_feature", default: false })
     isFeature: boolean;
+
+    @Column({ name: "show_cases", type: "json", nullable: true })
+    showCases: string[];
 
     @Column({ name: "ai_model_id", nullable: true })
     aiModelId: string;

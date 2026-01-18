@@ -13,8 +13,14 @@ export class PromptController {
     }
 
     @Get()
-    findAll(@Query('search') search: string, @Query('categoryId') categoryId: string, @Query('modelId') modelId: string) {
-        return this.promptService.findAll(search, categoryId, modelId);
+    findAll(
+        @Query('search') search: string,
+        @Query('categoryId') categoryId: string,
+        @Query('modelId') modelId: string,
+        @Query('page') page: string,
+        @Query('limit') limit: string,
+    ) {
+        return this.promptService.findAll(search, categoryId, modelId, page ? parseInt(page) : 1, limit ? parseInt(limit) : 10);
     }
 
     @Get(':id')

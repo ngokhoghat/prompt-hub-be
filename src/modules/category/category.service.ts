@@ -18,7 +18,7 @@ export class CategoryService {
     }
 
     async findAll() {
-        return await this.categoryRepository.find();
+        return await this.categoryRepository.find({ where: { isDelete: false } });
     }
 
     async findOne(id: string) {
@@ -37,6 +37,7 @@ export class CategoryService {
 
     async remove(id: string) {
         const category = await this.findOne(id);
-        return await this.categoryRepository.remove(category);
+        category.isDelete = true;
+        return await this.categoryRepository.save(category);
     }
 }

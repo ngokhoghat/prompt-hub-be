@@ -7,6 +7,10 @@ export class CreatePromptDto {
 
     @IsOptional()
     @IsString()
+    slug: string;
+
+    @IsOptional()
+    @IsString()
     description: string;
 
     @IsNotEmpty()
@@ -32,4 +36,8 @@ export class CreatePromptDto {
     @IsOptional()
     @IsString()
     categoryId: string;
+
+    @IsOptional()
+    @IsString({ each: true })
+    showCases: string[];
 }
