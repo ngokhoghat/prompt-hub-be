@@ -28,6 +28,11 @@ export class PromptController {
         return this.promptService.findOne(id);
     }
 
+    @Get(':id/similar')
+    findSimilar(@Param('id') id: string) {
+        return this.promptService.findSimilar(id);
+    }
+
     @Patch(':id')
     update(@Param('id') id: string, @Body() updatePromptDto: UpdatePromptDto) {
         return this.promptService.update(id, updatePromptDto);

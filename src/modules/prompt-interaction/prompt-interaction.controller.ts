@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Ip } from '@nestjs/common';
 import { PromptInteractionService } from './prompt-interaction.service';
 import { InteractionDto } from './dto/interaction.dto';
 
@@ -7,13 +7,13 @@ export class PromptInteractionController {
     constructor(private readonly interactionService: PromptInteractionService) { }
 
     @Post('like')
-    toggleLike(@Body() dto: InteractionDto) {
-        return this.interactionService.toggleLike(dto);
+    toggleLike(@Body() dto: InteractionDto, @Ip() ip: string) {
+        return this.interactionService.toggleLike(dto, ip);
     }
 
     @Post('save')
-    toggleSave(@Body() dto: InteractionDto) {
-        return this.interactionService.toggleSave(dto);
+    toggleSave(@Body() dto: InteractionDto, @Ip() ip: string) {
+        return this.interactionService.toggleSave(dto, ip);
     }
 
     @Post('view')

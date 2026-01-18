@@ -6,6 +6,9 @@ export class PromptSave extends CustomBaseEntity {
     @Column({ name: "prompt_id" })
     promptId: string;
 
-    @Column({ name: "user_id" })
+    @Column({ name: "user_ip" })
+    userIp: string;
+
+    @Column({ name: "user_id", nullable: true })
     userId: string;
 }

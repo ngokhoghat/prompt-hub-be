@@ -3,7 +3,7 @@ import { CreatePromptDto } from './dto/create-prompt.dto';
 import { UpdatePromptDto } from './dto/update-prompt.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Prompt } from './entities/prompt.entity';
-import { In, Repository } from 'typeorm';
+import { In, Repository, Brackets } from 'typeorm';
 import { Tag } from '../tag/entities/tag.entity';
 
 @Injectable()
@@ -108,6 +108,57 @@ export class PromptService implements OnModuleInit {
                 totalPages: Math.ceil(total / limit),
             },
         };
+    }
+
+    async findSimilar(id: string, limit: number = 4) {
+        const prompt = await this.findOne(id);
+        const queryBuilder = this.promptRepository.createQueryBuilder('prompt')
+            .leftJoinAndSelect('prompt.tags', 'tags')
+            .leftJoinAndSelect('prompt.category', 'category')
+            .leftJoinAndSelect('prompt.aiModel', 'aiModel') // Select aiModel as well for card display
+            .where('prompt.id != :id', { id });
+
+        // Logic: Same category OR Same tags
+        let hasCondition = false;
+
+        if (prompt.category) {
+            queryBuilder.andWhere(
+                new Brackets((qb) => {
+                    qb.where('category.id = :categoryId', { categoryId: prompt.category.id });
+
+                    if (prompt.tags && prompt.tags.length > 0) {
+                        const tagIds = prompt.tags.map(t => t.id);
+                        qb.orWhere('tags.id IN (:...tagIds)', { tagIds });
+                    }
+                })
+            );
+            hasCondition = true;
+        } else if (prompt.tags && prompt.tags.length > 0) {
+            const tagIds = prompt.tags.map(t => t.id);
+            queryBuilder.andWhere('tags.id IN (:...tagIds)', { tagIds });
+            hasCondition = true;
+        }
+
+        // If no category and no tags, maybe return random or trending? 
+        // For now, if no conditions, it might return everything excluding itself if we don't return early.
+        // Let's fallback to returning recent prompts if nothing matches?
+        // Or just allow standard query which implies "any" if we didn't add brackets.
+
+        if (!hasCondition) {
+            // Fallback: just return latest
+        }
+
+        queryBuilder.orderBy('prompt.createdAt', 'DESC').take(limit);
+
+        // We need to return the data format expected by frontend. 
+        // Frontend expects: { data: [...] } usually from our response wrapper, but service returns entity array.
+        // The controller usually wrapping is implicit or explicit. 
+        // Existing findAll returns { data, meta }. 
+        // findSimilar can just return { data: result }
+
+        const result = await queryBuilder.getMany();
+
+        return { data: result };
     }
 
     async findOne(identifier: string) {
