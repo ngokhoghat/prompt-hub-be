@@ -1,0 +1,34 @@
+name: Build PromptHub Backend
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    name: Build Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ngocdinh
+          password: dckr_pat_Y7GHjUC3Xcp-e21cIpEkusuCc9Y
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          version: v0.7.0
+
+      - name: Build Backend Service
+        uses: docker/build-push-action@v6
+        with:
+          file: Dockerfile
+          push: true
+          tags: ngocdinh/prompthub-backend:v1
