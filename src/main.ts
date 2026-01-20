@@ -8,7 +8,7 @@ import { DatabaseService } from './config/_database/database.service';
   await new DatabaseService().createDatabase();
   const app = await NestFactory.create<NestApplication>(AppModule);
   const logger = new Logger('bootstrap');
-  app.setGlobalPrefix('api-fs');
+  app.setGlobalPrefix('api-ps');
   app.enableCors({ origin: true, credentials: true });
   app.useStaticAssets(join(__dirname, '..', 'public'));
   await app.listen(process.env.PORT || 8889, '0.0.0.0');
